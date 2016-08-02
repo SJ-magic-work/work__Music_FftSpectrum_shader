@@ -43,8 +43,8 @@ void ofApp::setup(){
 	/********************
 	********************/
 	// sound.load( "surface.wav" );	
-	// sound.load( "ClubLife by Tiesto Podcast 472.wav" );	
-	sound.load( "music.mp3" );	
+	sound.load( "ClubLife by Tiesto Podcast 472.wav" );	
+	// sound.load( "music.mp3" );	
 	sound.setLoop( true );
 	sound.play();
 	

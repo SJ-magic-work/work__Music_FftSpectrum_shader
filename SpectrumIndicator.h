@@ -34,6 +34,7 @@ class SPECTRUM_INDICATOR__BASE{
 		ofxPanel gui;
 		ofxFloatSlider IndicatorVerticalSpace_ratio;
 		ofxFloatSlider IndicatorTextureSize_ratio;
+		ofxFloatSlider FreqFilter_k;
 		
 		/********************
 		********************/

@@ -97,6 +97,7 @@ void SPECTRUM_INDICATOR__TYPE_STRAIGHT::setup_gui()
 	
 	/********************
 	********************/
+	gui.add(FreqFilter_k.setup("Freq Filter", 0.85, 0.1, 1.0));
 	gui.add(x_Blank_ratio.setup("x blank ratio", 0.05, 0.0, 0.5));
 	gui.add(y_ofs_ratio.setup("y_ofs ratio", 0.04, 0.01, 0.5));
 	gui.add(IndicatorVerticalSpace_ratio.setup("v space ratio", 0.65, 0.3, 2.0));
@@ -250,6 +251,7 @@ void SPECTRUM_INDICATOR__TYPE_STRAIGHT::draw(ofShader& shader, float *spectrum)
 		ofPushMatrix();
 		ofTranslate(0, y_ofs[LineId]);
 		
+		float spectrum_out = spectrum[NUM_DISP_SPECTRUMS - 1];
 		int id = 0;
 		int sgn = 1;
 		for(int i = 0; i < 3; i++){ // NUM_DISP_SPECTRUMS 本のSpectrumをx方向に3回描画
@@ -272,18 +274,18 @@ void SPECTRUM_INDICATOR__TYPE_STRAIGHT::draw(ofShader& shader, float *spectrum)
 				********************/
 				// float x = x_ofs[LineId] + i * IndicatorHoriSpace * NUM_DISP_SPECTRUMS + j * IndicatorHoriSpace;
 				float x = x_ofs[LineId] + i * ofGetWidth() + j * IndicatorHoriSpace;
-				
+				spectrum_out = FreqFilter_k * spectrum[id] + (1 - FreqFilter_k) * spectrum_out;
 				
 				if( (x_Blank <= x) && (x < (ofGetWidth() - x_Blank)) ){
 					if(LineId == UPPER_LINE){
-						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, MaxLightHeight[LineId] * spectrum[id], 0) );
+						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, MaxLightHeight[LineId] * spectrum_out, 0) );
 						
 					}else if(LineId == LOWER_LINE){
-						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, - MaxLightHeight[LineId] * spectrum[id], 0) );
+						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, - MaxLightHeight[LineId] * spectrum_out, 0) );
 						
 					}else if(LineId == MIDDLE_LINE){
-						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, MaxLightHeight[LineId] * spectrum[id], 0) );
-						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, - MaxLightHeight[LineId] * spectrum[id], 0) );
+						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, MaxLightHeight[LineId] * spectrum_out, 0) );
+						vbo_drawLine( ofVec3f(x, 0, 0), ofVec3f(x, - MaxLightHeight[LineId] * spectrum_out, 0) );
 					}
 				}
 				
@@ -351,6 +353,7 @@ void SPECTRUM_INDICATOR__TYPE_CIRCLE::setup_gui()
 	
 	/********************
 	********************/
+	gui.add(FreqFilter_k.setup("Freq Filter", 0.9, 0.1, 1.0));
 	gui.add(IndicatorVerticalSpace_ratio.setup("v space ratio", 1.1, 0.3, 2.5));
 	gui.add(IndicatorTextureSize_ratio.setup("texture size", 0.0145 ,0.005, 0.07));
 	
@@ -459,15 +462,16 @@ void SPECTRUM_INDICATOR__TYPE_CIRCLE::draw(ofShader& shader, float *spectrum)
 		ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
 		ofRotate(BaseAngle[LineId]);
 		
-		for(int i = 0; i < NUM_DISP_SPECTRUMS/2; i++){
-			ofRotate(IndicatorAngleStep); // Loopで積算されていくので、"i * IndicatorAngleStep" としないように!!!!!
-			vbo_drawLine( ofVec3f(0, -radius[LineId], 0), ofVec3f(0, -radius[LineId] - MaxLightHeight[LineId] * spectrum[i], 0) );
-		}
-		// same patternにして同軸方向に突き抜けるイメージにした.
-		for(int i = 0; i < NUM_DISP_SPECTRUMS/2; i++){
-			ofRotate(IndicatorAngleStep);
-			// vbo_drawLine( ofVec3f(0, -radius[LineId], 0), ofVec3f(0, -radius[LineId] - MaxLightHeight[LineId] * spectrum[NUM_DISP_SPECTRUMS/2 - i], 0) );
-			vbo_drawLine( ofVec3f(0, -radius[LineId], 0), ofVec3f(0, -radius[LineId] - MaxLightHeight[LineId] * spectrum[i], 0) );
+		float spectrum_out = spectrum[NUM_DISP_SPECTRUMS/2 - 1];
+		
+		// same pattern繰り返しで、同軸方向に突き抜けるイメージ
+		for(int i = 0; i < 2; i++){
+			for(int i = 0; i < NUM_DISP_SPECTRUMS/2; i++){
+				spectrum_out = FreqFilter_k * spectrum[i] + (1 - FreqFilter_k) * spectrum_out;
+				
+				ofRotate(IndicatorAngleStep); // Loopで積算されていくので、"i * IndicatorAngleStep" としないように!!!!!
+				vbo_drawLine( ofVec3f(0, -radius[LineId], 0), ofVec3f(0, -radius[LineId] - MaxLightHeight[LineId] * spectrum_out, 0) );
+			}
 		}
 		
 		ofPopMatrix();
@@ -511,6 +515,7 @@ void SPECTRUM_INDICATOR__TYPE_POINT::setup_gui()
 	
 	/********************
 	********************/
+	gui.add(FreqFilter_k.setup("Freq Filter", 1.0, 0.1, 1.0));
 	gui.add(NumDisp_Spectrums.setup("Num Disp", 5, 3, 15));
 	gui.add(IndicatorTextureSize_ratio.setup("texture size", 0.36, 0.1, 1.0));
 	gui.add(IndicatorGainSize_ratio.setup("Gain", 2.7, 0, 10));
@@ -563,10 +568,13 @@ void SPECTRUM_INDICATOR__TYPE_POINT::draw(ofShader& shader, float *spectrum)
 	ofPushMatrix();
 	ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
 	
+	float spectrum_out = spectrum[NUM_DISP_SPECTRUMS - 1];
+	
 	for(int id = 0; id < NUM_DISP_SPECTRUMS; id++){
 		int x = (int)(id * IndicatorHoriSpace);
 		
-		shader.setUniform1f( "DispTextureSize", IndicatorTextureSize + IndicatorGainSize * spectrum[id] ); // 描画サイズ
+		spectrum_out = FreqFilter_k * spectrum[id] + (1 - FreqFilter_k) * spectrum_out;
+		shader.setUniform1f( "DispTextureSize", IndicatorTextureSize + IndicatorGainSize * spectrum_out ); // 描画サイズ
 		// shader.setUniform1f( "TextureSize", IndicatorTextureSize ); // 描画サイズ
 		for(int y = 0; y <= ofGetHeight()/2; y+= IndicatorVertSpace){
 			/********************
