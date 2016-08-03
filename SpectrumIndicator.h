@@ -225,7 +225,7 @@ class SPECTRUM_INDICATOR{
 		void update();
 		void draw(float *spectrum);
 		
-		void toggle_dispGui();
+		void set_dispGui(bool val);
 		void toggle_PointIndicator();
 		void change_IndicatorType(int type);
 		void save_setting();

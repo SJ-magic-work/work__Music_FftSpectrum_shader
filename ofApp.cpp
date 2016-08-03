@@ -42,6 +42,11 @@ void ofApp::setup(){
 	
 	/********************
 	********************/
+	b_Particle = false;
+	ParticleSet.setup();
+	
+	/********************
+	********************/
 	// sound.load( "surface.wav" );	
 	sound.load( "ClubLife by Tiesto Podcast 472.wav" );	
 	// sound.load( "music.mp3" );	
@@ -67,6 +72,10 @@ void ofApp::setup(){
 	
 	gui.add(gui_param[0].setup("smooth", 0.05, 0.01, 0.2));
 	gui.add(gui_param[1].setup("NonLinear", 0.02, 0.01, 0.5));
+	
+	/********************
+	********************/
+	b_DispGui = false;
 }
 
 //--------------------------------------------------------------
@@ -134,6 +143,8 @@ void ofApp::update(){
 	/********************
 	********************/
 	SpectrumIndicator.update();
+	
+	if(b_Particle) ParticleSet.update(mouseX, mouseY);
 }
 
 //--------------------------------------------------------------
@@ -141,6 +152,7 @@ void ofApp::draw(){
 	/********************
 	********************/
 	ofBackground(0, 0, 0, 0);
+	ofSetColor(255, 255, 255, 255);
 	
 	/********************
 	********************/
@@ -154,6 +166,13 @@ void ofApp::draw(){
 	
 	SpectrumIndicator.draw(spectrum);
 	
+	/********************
+	********************/
+	if(b_Particle)	ParticleSet.draw();
+	
+	/********************
+	********************/
+	ofSetColor(255, 255, 255, 255);
 	if(b_disp_FrameRate){
 		string info;
 		info += "FPS = " + ofToString(ofGetFrameRate(), 2);
@@ -242,7 +261,8 @@ void ofApp::keyPressed(int key){
 			break;
 			
 		case 'g':
-			SpectrumIndicator.toggle_dispGui();
+			b_DispGui = !b_DispGui;
+			SpectrumIndicator.set_dispGui(b_DispGui);
 			break;
 			
 		case 'k':
@@ -272,6 +292,10 @@ void ofApp::keyPressed(int key){
 			printf("k\tseek\n");
 			printf("s\tsave gui setting\n");
 			printf("x\tLoad gui setting\n");
+			break;
+			
+		case 'p':
+			b_Particle = !b_Particle;
 			break;
 			
 		case 's':
@@ -367,12 +391,12 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	ParticleSet.set_attractive(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+	ParticleSet.set_attractive(false);
 }
 
 //--------------------------------------------------------------

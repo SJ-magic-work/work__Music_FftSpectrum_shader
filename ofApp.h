@@ -7,6 +7,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "SpectrumIndicator.h"
+#include "particle.h"
 
 
 /************************************************************
@@ -18,12 +19,17 @@ class ofApp : public ofBaseApp{
 		******************************/
 		
 		/********************
+		for parameter tune
 		********************/
 		enum{
 			NUM_GUI_PARAMS = 5,
 		};
 		ofxPanel gui;
 		ofxFloatSlider gui_param[NUM_GUI_PARAMS];
+		
+		/********************
+		********************/
+		bool b_DispGui;
 		
 		/********************
 		********************/
@@ -56,6 +62,11 @@ class ofApp : public ofBaseApp{
 		bool b_disp_FrameRate;
 		
 		SPECTRUM_INDICATOR SpectrumIndicator;
+		
+		/********************
+		********************/
+		PARTICLE_SET ParticleSet;
+		bool b_Particle;
 		
 		/********************
 		********************/

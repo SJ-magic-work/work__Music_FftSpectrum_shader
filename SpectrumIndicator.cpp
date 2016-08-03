@@ -794,9 +794,9 @@ void SPECTRUM_INDICATOR::toggle_PointIndicator()
 
 /******************************
 ******************************/
-void SPECTRUM_INDICATOR::toggle_dispGui()
+void SPECTRUM_INDICATOR::set_dispGui(bool val)
 {
-	b_dispGui = !b_dispGui;
+	b_dispGui = val;
 }
 
 /******************************
