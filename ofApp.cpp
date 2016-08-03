@@ -144,7 +144,9 @@ void ofApp::update(){
 	********************/
 	SpectrumIndicator.update();
 	
-	if(b_Particle) ParticleSet.update(mouseX, mouseY);
+	/* 無効時もupdateし、減速させておく */
+	// if(b_Particle) ParticleSet.update(mouseX, mouseY);
+	ParticleSet.update(mouseX, mouseY);
 }
 
 //--------------------------------------------------------------
@@ -263,6 +265,15 @@ void ofApp::keyPressed(int key){
 		case 'g':
 			b_DispGui = !b_DispGui;
 			SpectrumIndicator.set_dispGui(b_DispGui);
+			ParticleSet.set_dispGui(b_DispGui);
+			break;
+			
+		case 'h':
+			ofHideCursor();
+			break;
+			
+		case 'i':
+			ofShowCursor();
 			break;
 			
 		case 'k':
@@ -391,11 +402,13 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	// b_Particle 無効時もonにしておき、裏で操作可能にしておく
 	ParticleSet.set_attractive(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
+	// b_Particle 無効時もonにしておき、裏で操作可能にしておく
 	ParticleSet.set_attractive(false);
 }
 

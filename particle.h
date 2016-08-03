@@ -3,6 +3,7 @@
 /************************************************************
 ************************************************************/
 #include "ofMain.h"
+#include "ofxGui.h"
 
 
 /************************************************************
@@ -41,6 +42,7 @@ public:
 	
 	
 	void addAttractionForce(float x, float y, float radius, float scale);
+	float get_Speed()	{ return velocity.length(); }
 };
 
 /**************************************************
@@ -51,7 +53,7 @@ private:
 	********************/
 	enum{
 		// NUM_PARTICLES = 100000,
-		NUM_PARTICLES = 50000,
+		NUM_PARTICLES = 30000,
 	};
 	
 	/********************
@@ -68,10 +70,15 @@ private:
 	int mouseX;
 	int mouseY;
 	
-	ofColor CommonColor;
 	
 	/********************
 	********************/
+	bool b_dispGui;
+	
+	ofxPanel gui;
+	ofxVec4Slider CommonColor;
+	ofxFloatSlider SpeedThresh;
+	
 
 public:
 	PARTICLE_SET();
@@ -84,6 +91,7 @@ public:
 	void init_particleArray();
 	void set_attractive(bool b_val);
 	void set_color(ofColor _color);
+	void set_dispGui(bool val);
 };
 
 

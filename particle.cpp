@@ -131,6 +131,7 @@ void PARTICLE_SET::setup()
 	/********************
 	********************/
 	atraction = false;
+	b_dispGui = false;
 	
 	/********************
 	********************/
@@ -147,7 +148,16 @@ void PARTICLE_SET::setup()
 	
 	/********************
 	********************/
-	CommonColor = ofColor(0, 120, 255);
+	gui.setup();
+	{
+		ofVec4f initColor = ofVec4f(0, 0.5, 1.0, 0.5);
+		ofVec4f minColor = ofVec4f(0, 0, 0, 0);
+		ofVec4f maxColor = ofVec4f(1, 1, 1, 1);
+		
+		gui.add(CommonColor.setup("color", initColor, minColor, maxColor));
+	}
+	gui.add(SpeedThresh.setup("Speed thresh", 4.5, 1.0, 50));
+	
 }
 
 /******************************
@@ -167,7 +177,8 @@ void PARTICLE_SET::update(int _mouseX, int _mouseY)
 	for (int i = 0; i < particles.size(); i++){
 
 		if (atraction) {
-			particles[i].addAttractionForce(mouseX, mouseY, ofGetWidth(), 0.1);
+			// particles[i].addAttractionForce(mouseX, mouseY, ofGetWidth(), 0.1);
+			particles[i].addAttractionForce(mouseX, mouseY, ofGetWidth(), 0.15);
 		}
 
 		particles[i].update();
@@ -175,9 +186,23 @@ void PARTICLE_SET::update(int _mouseX, int _mouseY)
 	
 	/********************
 	********************/
+	const double Alpha_max = CommonColor->w;
+	double tan = Alpha_max / SpeedThresh;
+	
+	/********************
+	********************/
 	for (int i = 0; i < particles.size(); i++) {
 		Verts[i] = ofVec3f(particles[i].position.x, particles[i].position.y, 0);
-		Color[i] = CommonColor;
+		
+		
+		float Alpha;
+		if(SpeedThresh < particles[i].get_Speed()){
+			Alpha = Alpha_max;
+		}else{
+			Alpha = tan * particles[i].get_Speed();
+		}
+		// Color[i].set(CommonColor->x, CommonColor->y, CommonColor->z, CommonColor->w);
+		Color[i].set(CommonColor->x, CommonColor->y, CommonColor->z, Alpha);
 	}
 	
 	Vbo.updateVertexData(Verts, NUM_PARTICLES);
@@ -218,6 +243,8 @@ void PARTICLE_SET::draw()
 	ofCircle(mouseX, mouseY, 4);
 	
 	ofSetColor(255, 255, 255, 255);
+	
+	if(b_dispGui)	gui.draw();
 
 	/*
 	// èdóÕÇÃì_Çï`Ç≠
@@ -247,7 +274,7 @@ void PARTICLE_SET::init_particleArray()
 	for (int i = 0; i < NUM_PARTICLES; i++) {
 		Particle p;
 		
-		p.friction = 0.0015;
+		p.friction = 0.002;
 		p.setup(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())), ofVec2f(0, 0));
 				
 		particles.push_back(p);
@@ -265,6 +292,13 @@ void PARTICLE_SET::set_attractive(bool b_val)
 ******************************/
 void PARTICLE_SET::set_color(ofColor _color)
 {
-	CommonColor = _color;
+	// CommonColor = _color;
+}
+
+/******************************
+******************************/
+void PARTICLE_SET::set_dispGui(bool val)
+{
+	b_dispGui = val;
 }
 
