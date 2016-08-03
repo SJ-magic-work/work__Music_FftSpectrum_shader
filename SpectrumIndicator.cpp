@@ -97,7 +97,7 @@ void SPECTRUM_INDICATOR__TYPE_STRAIGHT::setup_gui()
 	
 	/********************
 	********************/
-	gui.add(FreqFilter_k.setup("Freq Filter", 0.85, 0.1, 1.0));
+	gui.add(FreqFilter_k.setup("Freq Filter", 1.0, 0.1, 1.0));
 	gui.add(x_Blank_ratio.setup("x blank ratio", 0.05, 0.0, 0.5));
 	gui.add(y_ofs_ratio.setup("y_ofs ratio", 0.04, 0.01, 0.5));
 	gui.add(IndicatorVerticalSpace_ratio.setup("v space ratio", 0.65, 0.3, 2.0));
@@ -353,7 +353,7 @@ void SPECTRUM_INDICATOR__TYPE_CIRCLE::setup_gui()
 	
 	/********************
 	********************/
-	gui.add(FreqFilter_k.setup("Freq Filter", 0.9, 0.1, 1.0));
+	gui.add(FreqFilter_k.setup("Freq Filter", 1.0, 0.1, 1.0));
 	gui.add(IndicatorVerticalSpace_ratio.setup("v space ratio", 1.1, 0.3, 2.5));
 	gui.add(IndicatorTextureSize_ratio.setup("texture size", 0.0145 ,0.005, 0.07));
 	

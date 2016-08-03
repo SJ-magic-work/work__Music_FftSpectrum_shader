@@ -3,7 +3,9 @@
 
 #pragma once
 
+
 #include "ofMain.h"
+#include "ofxGui.h"
 #include "SpectrumIndicator.h"
 
 
@@ -14,6 +16,15 @@ class ofApp : public ofBaseApp{
 	private:
 		/******************************
 		******************************/
+		
+		/********************
+		********************/
+		enum{
+			NUM_GUI_PARAMS = 5,
+		};
+		ofxPanel gui;
+		ofxFloatSlider gui_param[NUM_GUI_PARAMS];
+		
 		/********************
 		********************/
 		enum{

@@ -60,6 +60,13 @@ void ofApp::setup(){
 	/********************
 	********************/
 	State = STATE_NONE;
+
+	/********************
+	********************/
+	gui.setup();
+	
+	gui.add(gui_param[0].setup("smooth", 0.05, 0.01, 0.2));
+	gui.add(gui_param[1].setup("NonLinear", 0.02, 0.01, 0.5));
 }
 
 //--------------------------------------------------------------
@@ -75,9 +82,9 @@ void ofApp::update(){
 	//because it is managed by sound engine
 
 	/********************
-	-	smooth Filter
-	-	slow decreasing
 	********************/
+	float val_ave[N];
+	
 	/* */
 	static float LastINT_sec = 0;
 	float now = ofGetElapsedTimef();
@@ -85,12 +92,18 @@ void ofApp::update(){
 	LastINT_sec = now;
 	
 	/* */
-	const double FilterThreshTime = 0.05; // 小さくする程Responceが良くなる.
-	double tangent = 1 / FilterThreshTime;
+	// const double SmoothFilterThreshTime = 0.05; // 小さくする程Responceが良くなる.
+	const double SmoothFilterThreshTime = 0.03;
+	double tangent = 1 / SmoothFilterThreshTime;
 	
-	double alpha;
-	if(dt < FilterThreshTime)	alpha = tangent * dt;
-	else						alpha = 1;
+	double SmoothFilterAlpha;
+	if(dt < SmoothFilterThreshTime)	SmoothFilterAlpha = tangent * dt;
+	else							SmoothFilterAlpha = 1;
+	
+	/* */
+	// const double NonLinearFilter_ThreshLev = 0.02;
+	const double NonLinearFilter_ThreshLev = 0.08;
+	const double NonLinearFilter_k = 1/NonLinearFilter_ThreshLev;
 	
 	/* */
 	const float Down_per_ms = 0.05 / 16.6;
@@ -98,11 +111,25 @@ void ofApp::update(){
 	
 	/* */
 	for ( int i=0; i<N; i++ ) {
-		val[i] = alpha * val[i] + (1 - alpha) * spectrum[i];
+		/* */
+		val_ave[i] = SmoothFilterAlpha * val[i] + (1 - SmoothFilterAlpha) * spectrum[i];
 		
+		/* */
+		double diff = val_ave[i] - spectrum[i];
+		if( (0 <= diff) && (diff < NonLinearFilter_ThreshLev) ){
+			diff = NonLinearFilter_k * pow(diff, 2);
+		}else if( (-NonLinearFilter_ThreshLev < diff) && (diff < 0) ){
+			diff = -NonLinearFilter_k * pow(diff, 2);
+		}else{
+			diff = diff;
+		}
+		float val_NonLinearFilter_out = spectrum[i] + diff;
+		
+		/* */
 		spectrum[i] *= (1 - DownRatio);
-		spectrum[i] = max( spectrum[i], val[i] );
+		spectrum[i] = max( spectrum[i], val_NonLinearFilter_out );
 	}
+	
 
 	/********************
 	********************/
@@ -134,6 +161,8 @@ void ofApp::draw(){
 	}
 	
 	print_musicTime();
+	
+	// gui.draw();
 }
 
 /******************************
