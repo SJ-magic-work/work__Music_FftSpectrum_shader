@@ -10,7 +10,7 @@ Particle methods
 /******************************
 ******************************/
 Particle::Particle(){
-	friction = 0.01;
+	set_friction(1);
 }
 
 /******************************
@@ -35,22 +35,22 @@ void Particle::resetForce(){
 
 /******************************
 ******************************/
-void Particle::updateForce(){
-	velocity = velocity * (1 - friction);
+void Particle::updateForce(float dt){
+	velocity = velocity * (1 - friction_DownPer_ms * dt);
 }
 
 /******************************
 ******************************/
-void Particle::updatePos(){
-	velocity += force;
-	position += velocity;
+void Particle::updatePos(float dt){
+	velocity += force * dt;
+	position += velocity * dt;
 }
 
 /******************************
 ******************************/
-void Particle::update(){
-	updateForce();
-	updatePos();
+void Particle::update(float dt){
+	updateForce(dt);
+	updatePos(dt);
 	
 	throughOfWalls();
 }
@@ -80,9 +80,16 @@ void Particle::throughOfWalls(){
 /******************************
 description
 	引き付けあう力
+	
+param
+	scale
+		中心からの距離によってForceが決まるが、これに対するscaling.
+		時間は無関係である点に注意。
 ******************************/
 void Particle::addAttractionForce(float x, float y, float radius, float scale)
 {
+	/********************
+	********************/
 	ofVec2f posOfForce;
 	posOfForce.set(x,y);
 	
@@ -100,8 +107,8 @@ void Particle::addAttractionForce(float x, float y, float radius, float scale)
 		// 距離から点にかかる力ベクトルを計算
 		float pct = 1 - (length / radius);
 		diff.normalize();
-		force.x = force.x - diff.x * scale * pct;
-		force.y = force.y - diff.y * scale * pct;
+		force.x = - diff.x * scale * pct;
+		force.y = - diff.y * scale * pct;
 	}
 }
 
@@ -148,6 +155,13 @@ void PARTICLE_SET::setup()
 	
 	/********************
 	********************/
+	setup_gui();
+}
+
+/******************************
+******************************/
+void PARTICLE_SET::setup_gui()
+{
 	gui.setup();
 	{
 		ofVec4f initColor = ofVec4f(0, 0.5, 1.0, 0.5);
@@ -156,16 +170,43 @@ void PARTICLE_SET::setup()
 		
 		gui.add(CommonColor.setup("color", initColor, minColor, maxColor));
 	}
-	gui.add(SpeedThresh.setup("Speed thresh", 4.5, 1.0, 50));
+	gui.add(SpeedThresh.setup("Speed thresh", 0.2, 0.01, 1));
 	
+	gui.add(friction_DownPer_sec.setup("friction sec", 0.0991, 0.01, 1.0));
+	gui.add(forceScale.setup("Force Scale", 0.00019, 0.0001, 0.001));
+}
+
+/******************************
+******************************/
+void PARTICLE_SET::Refresh_friction()
+{
+	for (int i = 0; i < NUM_PARTICLES; i++) {
+		particles[i].set_friction(friction_DownPer_sec/1000);
+	}
 }
 
 /******************************
 ******************************/
 void PARTICLE_SET::update(int _mouseX, int _mouseY)
 {
+	/********************
+	********************/
+	static float LastINT = ofGetElapsedTimef();
+	float now = ofGetElapsedTimef();
+	float dt = ofClamp(now - LastINT, 0, 0.1) * 1000;
+	
+	LastINT = now;
+	
+	/********************
+	********************/
 	mouseX = _mouseX;
 	mouseY = _mouseY;
+	
+	/********************
+	各particleのfrictionは本来一定だが、
+	guiにてparameter調整するため、ここにrefreshを入れる。
+	********************/
+	Refresh_friction();
 	
 	/********************
 	update the position of all particle.
@@ -177,11 +218,10 @@ void PARTICLE_SET::update(int _mouseX, int _mouseY)
 	for (int i = 0; i < particles.size(); i++){
 
 		if (atraction) {
-			// particles[i].addAttractionForce(mouseX, mouseY, ofGetWidth(), 0.1);
-			particles[i].addAttractionForce(mouseX, mouseY, ofGetWidth(), 0.15);
+			particles[i].addAttractionForce(mouseX, mouseY, ofGetWidth(), forceScale );
 		}
 
-		particles[i].update();
+		particles[i].update(dt);
 	}
 	
 	/********************
@@ -190,11 +230,14 @@ void PARTICLE_SET::update(int _mouseX, int _mouseY)
 	double tan = Alpha_max / SpeedThresh;
 	
 	/********************
+	colorはSpeed downと共にαが下がっていくようにした。
 	********************/
 	for (int i = 0; i < particles.size(); i++) {
-		Verts[i] = ofVec3f(particles[i].position.x, particles[i].position.y, 0);
+		/* */
+		Verts[i] = ofVec3f(particles[i].get_pos_x(), particles[i].get_pos_y(), 0);
 		
 		
+		/* */
 		float Alpha;
 		if(SpeedThresh < particles[i].get_Speed()){
 			Alpha = Alpha_max;
@@ -245,7 +288,8 @@ void PARTICLE_SET::draw()
 	ofSetColor(255, 255, 255, 255);
 	
 	if(b_dispGui)	gui.draw();
-
+	
+	
 	/*
 	// 重力の点を描く
 	if (atraction) {
@@ -274,7 +318,7 @@ void PARTICLE_SET::init_particleArray()
 	for (int i = 0; i < NUM_PARTICLES; i++) {
 		Particle p;
 		
-		p.friction = 0.002;
+		p.set_friction(0.1/1000);
 		p.setup(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())), ofVec2f(0, 0));
 				
 		particles.push_back(p);

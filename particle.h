@@ -1,3 +1,7 @@
+/************************************************************
+************************************************************/
+
+
 #pragma once
 
 /************************************************************
@@ -14,21 +18,37 @@ class
 description
 	particle positionの管理.
 	描画機能は保持しない.
+	
+unit	
+	ms
+	pixel
+
+note
+	forceは、重力中心からの距離のみで決定され、時間は無関係。
+	forceがvelocityに、velocityがpositionに、それぞれ反映される時は、dtが必要になる。
 **************************************************/
 class Particle {
 private:
-	void updateForce();
-	void updatePos();
+	/****************************************
+	****************************************/
+	/********************
+	********************/
+	ofVec2f position;
+	ofVec2f velocity;
+	
+	/********************
+	********************/
+	float friction_DownPer_ms;
+	ofVec2f force;
+	
+	
+	/****************************************
+	****************************************/
+	void updateForce(float dt);
+	void updatePos(float dt);
 	void throughOfWalls();
 	
 public:
-	/****************************************
-	****************************************/
-	ofVec2f position;
-	ofVec2f velocity;
-	ofVec2f force;
-	float friction;
-	
 	/****************************************
 	****************************************/
 	Particle();
@@ -38,11 +58,16 @@ public:
 
 	void resetForce();
 
-	void update();
+	void update(float dt);
 	
 	
 	void addAttractionForce(float x, float y, float radius, float scale);
+	
 	float get_Speed()	{ return velocity.length(); }
+	float get_pos_x()	{ return position.x; }
+	float get_pos_y()	{ return position.y; }
+	
+	void set_friction(float val)	{ friction_DownPer_ms = val; }
 };
 
 /**************************************************
@@ -53,7 +78,7 @@ private:
 	********************/
 	enum{
 		// NUM_PARTICLES = 100000,
-		NUM_PARTICLES = 30000,
+		NUM_PARTICLES = 60000,
 	};
 	
 	/********************
@@ -63,6 +88,9 @@ private:
 	ofVbo Vbo;
 	ofVec3f* Verts;
 	ofFloatColor* Color;
+	ofxFloatSlider friction_DownPer_sec;
+	ofxFloatSlider forceScale;
+	
 	
 	
 	bool atraction;
@@ -78,6 +106,11 @@ private:
 	ofxPanel gui;
 	ofxVec4Slider CommonColor;
 	ofxFloatSlider SpeedThresh;
+	
+	/********************
+	********************/
+	void Refresh_friction();
+	void setup_gui();
 	
 
 public:

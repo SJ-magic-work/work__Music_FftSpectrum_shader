@@ -76,6 +76,7 @@ void ofApp::setup(){
 	/********************
 	********************/
 	b_DispGui = false;
+	b_showCursor = true;
 }
 
 //--------------------------------------------------------------
@@ -183,6 +184,13 @@ void ofApp::draw(){
 	
 	print_musicTime();
 	
+	/*
+	if(!b_showCursor){
+		ofSetColor(255, 255, 255, 80);
+		ofCircle(mouseX, mouseY, 1);
+	}
+	*/
+	
 	// gui.draw();
 }
 
@@ -270,10 +278,12 @@ void ofApp::keyPressed(int key){
 			
 		case 'h':
 			ofHideCursor();
+			b_showCursor = false;
 			break;
 			
 		case 'i':
 			ofShowCursor();
+			b_showCursor = true;
 			break;
 			
 		case 'k':

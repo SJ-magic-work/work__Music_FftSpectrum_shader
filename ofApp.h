@@ -60,6 +60,7 @@ class ofApp : public ofBaseApp{
 		
 		bool b_fullScreen;
 		bool b_disp_FrameRate;
+		bool b_showCursor;
 		
 		SPECTRUM_INDICATOR SpectrumIndicator;
 		
