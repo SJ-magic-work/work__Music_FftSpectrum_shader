@@ -169,6 +169,7 @@ void ofApp::draw(){
 	
 	SpectrumIndicator.draw(spectrum);
 	
+
 	/********************
 	********************/
 	if(b_Particle)	ParticleSet.draw();
@@ -317,6 +318,7 @@ void ofApp::keyPressed(int key){
 			
 		case 'p':
 			b_Particle = !b_Particle;
+			printf("\nparticle = %d\n", b_Particle);
 			break;
 			
 		case 's':

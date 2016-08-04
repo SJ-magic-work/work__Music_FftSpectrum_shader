@@ -216,6 +216,10 @@ class SPECTRUM_INDICATOR{
 		SPECTRUM_INDICATOR__TYPE_CIRCLE Indicator_Circle;
 		SPECTRUM_INDICATOR__TYPE_POINT Indicator_Point;
 		
+		/****************************************
+		****************************************/
+		void clear_VboSetting_gl();
+		
 
 
 	public:

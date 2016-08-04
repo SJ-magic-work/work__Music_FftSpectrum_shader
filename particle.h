@@ -88,9 +88,9 @@ private:
 	ofVbo Vbo;
 	ofVec3f* Verts;
 	ofFloatColor* Color;
+	ofxFloatSlider PointSize;
 	ofxFloatSlider friction_DownPer_sec;
 	ofxFloatSlider forceScale;
-	
 	
 	
 	bool atraction;
@@ -111,6 +111,7 @@ private:
 	********************/
 	void Refresh_friction();
 	void setup_gui();
+	void clear_VboSetting_gl();
 	
 
 public:

@@ -163,6 +163,7 @@ void PARTICLE_SET::setup()
 void PARTICLE_SET::setup_gui()
 {
 	gui.setup();
+	gui.add(PointSize.setup("PointSize", 2.0, 1.0, 4));
 	{
 		ofVec4f initColor = ofVec4f(0, 0.5, 1.0, 0.5);
 		ofVec4f minColor = ofVec4f(0, 0, 0, 0);
@@ -263,29 +264,13 @@ void PARTICLE_SET::draw()
 	/********************
 	********************/
 	ofSetColor(255, 255, 255, 255);
-	glPointSize(1.0);
+	glPointSize(PointSize);
 	glEnable(GL_POINT_SMOOTH);
 	Vbo.draw(GL_POINTS, 0, NUM_PARTICLES);
 	
 	/********************
-	注)
-	ofVboで描画すると、openGlの設定が何らか変わるようだ。
-	この結果、次に来る
-		ofDrawBitmapString()
-		image.draw()
-	等が描画されない現象が発生。
-	
-	この対応として、
-		ofCircle(). ofRect().
-	等を1発いれてやることで、OKとなった。
-	おそらく、この関数内で、openGl設定が、また変わるのだろう。
-		α = 0;
-	にて描画する。
 	********************/
-	ofSetColor(255, 255, 255, 0);
-	ofCircle(mouseX, mouseY, 4);
-	
-	ofSetColor(255, 255, 255, 255);
+	clear_VboSetting_gl();
 	
 	if(b_dispGui)	gui.draw();
 	
@@ -308,6 +293,29 @@ void PARTICLE_SET::draw()
 	ofDrawBitmapString("fps = " + ofToString(ofGetFrameRate()), 10, 20);
 	ofDrawBitmapString("Particle num = " + ofToString(particles.size()), 10, 40);
 	*/
+}
+
+/******************************
+descrition
+	ofVboで描画すると、openGlの設定が何らか変わるようだ。
+	この結果、次に来る描画が所望の動作とならないケース多数。
+		次のfunctionが描画されないなど
+			ofDrawBitmapString()
+			image.draw()
+			
+	この対応として、
+		ofCircle(). ofRect().
+	等を1発いれてやることで、OKとなった。
+	おそらく、この関数内で、openGl設定が、また変わるのだろう。
+		α = 0;
+	にて描画する。
+******************************/
+void PARTICLE_SET::clear_VboSetting_gl()
+{
+	ofSetColor(255, 255, 255, 0);
+	ofCircle(0, 0, 1);
+	
+	ofSetColor(255, 255, 255, 255);
 }
 
 /******************************
