@@ -27,7 +27,7 @@ void ofApp::setup(){
 	/********************
 	********************/
 	b_fullScreen = false;
-	b_disp_FrameRate = true;
+	b_disp_Time_and_FrameRate = true;
 	
 	ofEnableSmoothing();
 
@@ -177,22 +177,25 @@ void ofApp::draw(){
 	/********************
 	********************/
 	ofSetColor(255, 255, 255, 255);
-	if(b_disp_FrameRate){
-		string info;
-		info += "FPS = " + ofToString(ofGetFrameRate(), 2);
-		ofDrawBitmapString(info, 30, 30);
+	
+	if(b_disp_Time_and_FrameRate){
+		print_musicTime();
 	}
 	
-	print_musicTime();
-	
-	/*
-	if(!b_showCursor){
-		ofSetColor(255, 255, 255, 80);
-		ofCircle(mouseX, mouseY, 1);
-	}
-	*/
+	print_mousePosition();
 	
 	// gui.draw();
+}
+
+/******************************
+******************************/
+void ofApp::print_mousePosition()
+{
+	float x = float(mouseX) / ofGetWidth();
+	float y = float(mouseY) / ofGetHeight();
+	
+	printf("(%5.2f, %5.2f)\r", x, y);
+	fflush(stdout);
 }
 
 /******************************
@@ -201,12 +204,31 @@ void ofApp::print_musicTime()
 {
 	int pos_ms = sound.getPositionMS();
 	
-	int min	= pos_ms / 1000 / 60;
-	int sec	= pos_ms / 1000 - min * 60;
-	int ms	= pos_ms % 1000;
+	int min		= pos_ms / 1000 / 60;
+	int sec		= pos_ms / 1000 - min * 60;
+	int ms		= pos_ms % 1000;
+	int frame	= ms * 30 / 1000;
 	
+	/*
 	printf("%6d:%6d:%6d\r", min, sec, ms);
 	fflush(stdout);
+	*/
+	
+	/********************
+	ofToString
+		http://openframeworks.cc/documentation/utils/ofUtils/#show_ofToString
+	********************/
+	{
+		string info;
+		// info += ofToString(min, 4, ' ') + ":" + ofToString(sec, 4, ' ') + ":" + ofToString(ms, 4, ' ');
+		info += ofToString(min, 4, ' ') + ":" + ofToString(sec, 4, ' ') + ":" + ofToString(frame, 4, ' ');
+		ofDrawBitmapString(info, 30, 30);
+	}
+	{
+		string info;
+		info += "FPS = " + ofToString(ofGetFrameRate(), 2);
+		ofDrawBitmapString(info, 30, 50);
+	}
 }
 
 //--------------------------------------------------------------
@@ -260,7 +282,7 @@ void ofApp::keyPressed(int key){
 			break;
 			
 		case 'd':
-			b_disp_FrameRate = !b_disp_FrameRate;
+			b_disp_Time_and_FrameRate = !b_disp_Time_and_FrameRate;
 			break;
 			
 		case 'f':

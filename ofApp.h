@@ -59,7 +59,7 @@ class ofApp : public ofBaseApp{
 		ofImage img_Jacket;
 		
 		bool b_fullScreen;
-		bool b_disp_FrameRate;
+		bool b_disp_Time_and_FrameRate;
 		bool b_showCursor;
 		
 		SPECTRUM_INDICATOR SpectrumIndicator;
@@ -88,6 +88,7 @@ class ofApp : public ofBaseApp{
 		******************************/
 		bool IsSeekTarget_inRange(int sec);
 		void print_musicTime();
+		void print_mousePosition();
 		
 		
 		
