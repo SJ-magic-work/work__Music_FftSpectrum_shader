@@ -354,3 +354,41 @@ void PARTICLE_SET::set_dispGui(bool val)
 	b_dispGui = val;
 }
 
+/******************************
+******************************/
+void PARTICLE_SET::save_setting()
+{
+	gui.saveToFile("particle.xml");
+}
+
+/******************************
+******************************/
+void PARTICLE_SET::load_ColorTheme_setting(int ColorId)
+{
+	switch(ColorId){
+		case 0:
+			gui.loadFromFile("guiColor/Particle/Aqua.xml");
+			break;
+		case 1:
+			gui.loadFromFile("guiColor/Particle/Magma.xml");
+			break;
+		case 2:
+			gui.loadFromFile("guiColor/Particle/Digital.xml");
+			break;
+		case 3:
+			gui.loadFromFile("guiColor/Particle/Sexy.xml");
+			break;
+		case 4:
+			gui.loadFromFile("guiColor/Particle/Trip.xml");
+			break;
+		case 5:
+			gui.loadFromFile("guiColor/Particle/Reggae.xml");
+			break;
+		case 6:
+			gui.loadFromFile("guiColor/Particle/Samba.xml");
+			break;
+		case 7:
+			gui.loadFromFile("guiColor/Particle/Sweets.xml");
+			break;
+	}
+}

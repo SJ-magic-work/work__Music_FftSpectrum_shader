@@ -126,6 +126,9 @@ public:
 	void set_attractive(bool b_val);
 	void set_color(ofColor _color);
 	void set_dispGui(bool val);
+	
+	void save_setting();
+	void load_ColorTheme_setting(int ColorId);
 };
 
 

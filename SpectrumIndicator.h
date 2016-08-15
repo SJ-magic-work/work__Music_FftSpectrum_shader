@@ -88,6 +88,7 @@ class SPECTRUM_INDICATOR__TYPE_POINT : public SPECTRUM_INDICATOR__BASE{
 		void update();
 		void draw(ofShader& shader, float *spectrum);
 		void save_setting();
+		void load_ColorTheme_setting(int ColorId);
 };
 
 /**************************************************
@@ -143,6 +144,7 @@ class SPECTRUM_INDICATOR__TYPE_STRAIGHT : public SPECTRUM_INDICATOR__BASE{
 		void update();
 		void draw(ofShader& shader, float *spectrum);
 		void save_setting();
+		void load_ColorTheme_setting(int ColorId);
 		
 		void test();
 };
@@ -188,6 +190,7 @@ class SPECTRUM_INDICATOR__TYPE_CIRCLE : public SPECTRUM_INDICATOR__BASE{
 		void update();
 		void draw(ofShader& shader, float *spectrum);
 		void save_setting();
+		void load_ColorTheme_setting(int ColorId);
 };
 
 /**************************************************
@@ -234,6 +237,8 @@ class SPECTRUM_INDICATOR{
 		void change_IndicatorType(int type);
 		void save_setting();
 		void load_setting(int type);
+		
+		void load_ColorTheme_setting(int ColorId);
 		
 		int get_NumIndicatorTypes() { return NUM_INDICATOR_TYPES; }
 		

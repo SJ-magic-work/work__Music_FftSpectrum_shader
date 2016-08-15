@@ -27,7 +27,7 @@ void ofApp::setup(){
 	/********************
 	********************/
 	b_fullScreen = false;
-	b_disp_Time_and_FrameRate = true;
+	b_disp_Time_and_FrameRate = false;
 	
 	ofEnableSmoothing();
 
@@ -47,9 +47,9 @@ void ofApp::setup(){
 	
 	/********************
 	********************/
-	// sound.load( "surface.wav" );	
-	sound.load( "ClubLife by Tiesto Podcast 472.wav" );	
-	// sound.load( "music.mp3" );	
+	// sound.load( "ClubLife by Tiesto Podcast 465.wav" );	
+	sound.load( "faithless.wav" );	
+	
 	sound.setLoop( true );
 	sound.play();
 	
@@ -143,6 +143,43 @@ void ofApp::update(){
 
 	/********************
 	********************/
+	if(BootMode == BOOT_MODE__COLOR_CHANGE){
+		int ColorThemeId = ColorThemeTable.IsColorThemeChange( sound.getPositionMS() );
+		if(ColorThemeId != -1){
+			switch(ColorThemeId){
+				case 0:
+					printf("\nAqua\n");
+					break;
+				case 1:
+					printf("\nMagma\n");
+					break;
+				case 2:
+					printf("\nDigital\n");
+					break;
+				case 3:
+					printf("\nsexy\n");
+					break;
+				case 4:
+					printf("\nTrip\n");
+					break;
+				case 5:
+					printf("\nReggae\n");
+					break;
+				case 6:
+					printf("\nSamba\n");
+					break;
+				case 7:
+					printf("\nSweets\n");
+					break;
+			}
+			
+			SpectrumIndicator.load_ColorTheme_setting(ColorThemeId);
+			ParticleSet.load_ColorTheme_setting(ColorThemeId);
+		}
+	}
+	
+	/********************
+	********************/
 	SpectrumIndicator.update();
 	
 	/* 無効時もupdateし、減速させておく */
@@ -191,10 +228,21 @@ void ofApp::draw(){
 ******************************/
 void ofApp::print_mousePosition()
 {
+	/********************
+	********************/
+	int pos_ms = sound.getPositionMS();
+	
+	int min		= pos_ms / 1000 / 60;
+	int sec		= pos_ms / 1000 - min * 60;
+	int ms		= pos_ms % 1000;
+	int frame	= ms * 30 / 1000;
+	
+	/********************
+	********************/
 	float x = float(mouseX) / ofGetWidth();
 	float y = float(mouseY) / ofGetHeight();
 	
-	printf("(%5.2f, %5.2f)\r", x, y);
+	printf("(%5.2f, %5.2f)\t%6d:%6d:%6d\r", x, y, min, sec, ms);
 	fflush(stdout);
 }
 
@@ -345,6 +393,7 @@ void ofApp::keyPressed(int key){
 			
 		case 's':
 			SpectrumIndicator.save_setting();
+			ParticleSet.save_setting();
 			break;
 		
 		case 'x':
@@ -385,6 +434,7 @@ void ofApp::keyPressed(int key){
 					
 					if(IsSeekTarget_inRange(input_val_sec)){
 						sound.setPositionMS(input_val_sec * 1000);
+						ColorThemeTable.reset();
 					}
 				}
 			}

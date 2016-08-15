@@ -8,6 +8,7 @@
 #include "ofxGui.h"
 #include "SpectrumIndicator.h"
 #include "particle.h"
+#include "ColorTheme.h"
 
 
 /************************************************************
@@ -17,6 +18,14 @@ class ofApp : public ofBaseApp{
 	private:
 		/******************************
 		******************************/
+		
+		/********************
+		********************/
+		enum BOOT_MODE{
+			BOOT_MODE__NO_COLOR_CHANGE,
+			BOOT_MODE__COLOR_CHANGE,
+		};
+		BOOT_MODE BootMode;
 		
 		/********************
 		for parameter tune
@@ -42,12 +51,12 @@ class ofApp : public ofBaseApp{
 			HEIGHT = 720,
 		};
 		enum{
-		/*
 			WIDTH_SMALL = 630,
 			HEIGHT_SMALL = 360,
-		*/
+			/*
 			WIDTH_SMALL = 960,
 			HEIGHT_SMALL = 540,
+			*/
 		};
 		enum{
 			// N = 128,
@@ -84,6 +93,10 @@ class ofApp : public ofBaseApp{
 		};
 		enum STATE State;
 		
+		/********************
+		********************/
+		COLOR_THEME_TABLE ColorThemeTable;
+		
 		/******************************
 		******************************/
 		bool IsSeekTarget_inRange(int sec);
@@ -94,6 +107,10 @@ class ofApp : public ofBaseApp{
 		
 
 	public:
+		ofApp(int _mode){
+			BootMode = (BOOT_MODE)_mode;
+		}
+		
 		void setup();
 		void update();
 		void draw();

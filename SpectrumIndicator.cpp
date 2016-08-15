@@ -311,6 +311,38 @@ void SPECTRUM_INDICATOR__TYPE_STRAIGHT::save_setting()
 	gui.saveToFile("straight.xml");
 }
 
+/******************************
+******************************/
+void SPECTRUM_INDICATOR__TYPE_STRAIGHT::load_ColorTheme_setting(int ColorId)
+{
+	switch(ColorId){
+		case 0:
+			gui.loadFromFile("guiColor/Straight/Aqua.xml");
+			break;
+		case 1:
+			gui.loadFromFile("guiColor/Straight/Magma.xml");
+			break;
+		case 2:
+			gui.loadFromFile("guiColor/Straight/Digital.xml");
+			break;
+		case 3:
+			gui.loadFromFile("guiColor/Straight/Sexy.xml");
+			break;
+		case 4:
+			gui.loadFromFile("guiColor/Straight/Trip.xml");
+			break;
+		case 5:
+			gui.loadFromFile("guiColor/Straight/Reggae.xml");
+			break;
+		case 6:
+			gui.loadFromFile("guiColor/Straight/Samba.xml");
+			break;
+		case 7:
+			gui.loadFromFile("guiColor/Straight/Sweets.xml");
+			break;
+	}
+}
+
 /************************************************************
 SPECTRUM_INDICATOR__TYPE_CIRCLE
 ************************************************************/
@@ -485,6 +517,38 @@ void SPECTRUM_INDICATOR__TYPE_CIRCLE::save_setting()
 	gui.saveToFile("circle.xml");
 }
 
+/******************************
+******************************/
+void SPECTRUM_INDICATOR__TYPE_CIRCLE::load_ColorTheme_setting(int ColorId)
+{
+	switch(ColorId){
+		case 0:
+			gui.loadFromFile("guiColor/Circle/Aqua.xml");
+			break;
+		case 1:
+			gui.loadFromFile("guiColor/Circle/Magma.xml");
+			break;
+		case 2:
+			gui.loadFromFile("guiColor/Circle/Digital.xml");
+			break;
+		case 3:
+			gui.loadFromFile("guiColor/Circle/Sexy.xml");
+			break;
+		case 4:
+			gui.loadFromFile("guiColor/Circle/Trip.xml");
+			break;
+		case 5:
+			gui.loadFromFile("guiColor/Circle/Reggae.xml");
+			break;
+		case 6:
+			gui.loadFromFile("guiColor/Circle/Samba.xml");
+			break;
+		case 7:
+			gui.loadFromFile("guiColor/Circle/Sweets.xml");
+			break;
+	}
+}
+
 /************************************************************
 SPECTRUM_INDICATOR__TYPE_POINT
 ************************************************************/
@@ -601,6 +665,37 @@ void SPECTRUM_INDICATOR__TYPE_POINT::save_setting()
 	gui.saveToFile("point.xml");
 }
 
+/******************************
+******************************/
+void SPECTRUM_INDICATOR__TYPE_POINT::load_ColorTheme_setting(int ColorId)
+{
+	switch(ColorId){
+		case 0:
+			gui.loadFromFile("guiColor/Point/Aqua.xml");
+			break;
+		case 1:
+			gui.loadFromFile("guiColor/Point/Magma.xml");
+			break;
+		case 2:
+			gui.loadFromFile("guiColor/Point/Digital.xml");
+			break;
+		case 3:
+			gui.loadFromFile("guiColor/Point/Sexy.xml");
+			break;
+		case 4:
+			gui.loadFromFile("guiColor/Point/Trip.xml");
+			break;
+		case 5:
+			gui.loadFromFile("guiColor/Point/Reggae.xml");
+			break;
+		case 6:
+			gui.loadFromFile("guiColor/Point/Samba.xml");
+			break;
+		case 7:
+			gui.loadFromFile("guiColor/Point/Sweets.xml");
+			break;
+	}
+}
 
 /************************************************************
 SPECTRUM_INDICATOR
@@ -840,6 +935,15 @@ void SPECTRUM_INDICATOR::change_IndicatorType(int type)
 	}else{
 		IndicatorType = (enum INDICATOR_TYPE)type;
 	}
+}
+
+/******************************
+******************************/
+void SPECTRUM_INDICATOR::load_ColorTheme_setting(int ColorId)
+{
+	Indicator_Straight.load_ColorTheme_setting(ColorId);
+	Indicator_Circle.load_ColorTheme_setting(ColorId);
+	Indicator_Point.load_ColorTheme_setting(ColorId);
 }
 
 /******************************
