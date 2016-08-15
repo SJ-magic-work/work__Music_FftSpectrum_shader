@@ -13,6 +13,29 @@
 
 /************************************************************
 ************************************************************/
+
+/**************************************************
+**************************************************/
+class TIMING_ADJUST{
+	private:
+		bool b_Adjust;
+		int NextValue;
+		
+	public:
+		TIMING_ADJUST(){
+			b_Adjust = false;
+			NextValue = 0;
+		}
+		
+		// void set__b_Adjust(bool val)	{ b_Adjust = val; }
+		bool get__b_Adjust()			{ return b_Adjust; }
+		
+		void set__NextValue(int val)	{ printf("\n-----Action Qued-----\n"); b_Adjust = true; NextValue = val; }
+		int get__NextValue()			{ b_Adjust = false; return NextValue; }
+};
+
+/**************************************************
+**************************************************/
 class ofApp : public ofBaseApp{
 
 	private:
@@ -72,11 +95,18 @@ class ofApp : public ofBaseApp{
 		bool b_showCursor;
 		
 		SPECTRUM_INDICATOR SpectrumIndicator;
+		TIMING_ADJUST TimingAdjust_SpectrumIndicator;
+		TIMING_ADJUST TimingAdjust_SpectrumIndicator_point;
+		
+		/********************
+		********************/
+		ofVideoPlayer video;
 		
 		/********************
 		********************/
 		PARTICLE_SET ParticleSet;
 		bool b_Particle;
+		TIMING_ADJUST TimingAdjust_Particle;
 		
 		/********************
 		********************/

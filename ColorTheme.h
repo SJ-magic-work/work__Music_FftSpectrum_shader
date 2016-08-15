@@ -7,8 +7,9 @@
 /************************************************************
 ************************************************************/
 #define TITLE__FAITHLESS	0
-#define TITLE__TIESTO		1
-	#define TITLE TITLE__FAITHLESS
+#define TITLE__TIESTO_465	1
+#define	TITLE__TIESTO_471	2
+	#define TITLE TITLE__TIESTO_471
 
 /************************************************************
 ************************************************************/
@@ -34,6 +35,7 @@ class COLOR_THEME_TABLE{
 		
 		int IsColorThemeChange(int now_ms);
 		void reset();
+		bool IsColorThemeChange_soon(int now_ms);
 };
 
 

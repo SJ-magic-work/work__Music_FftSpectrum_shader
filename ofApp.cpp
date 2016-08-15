@@ -42,13 +42,23 @@ void ofApp::setup(){
 	
 	/********************
 	********************/
+	video.loadMovie("GoodVibesTimeLapse Video.mov");
+	video.setLoopState(OF_LOOP_NORMAL);
+	video.play();
+	video.setSpeed(1);
+	video.setVolume(0);
+
+	
+	/********************
+	********************/
 	b_Particle = false;
 	ParticleSet.setup();
 	
 	/********************
 	********************/
 	// sound.load( "ClubLife by Tiesto Podcast 465.wav" );	
-	sound.load( "faithless.wav" );	
+	sound.load( "ClubLife by Tiesto Podcast 471.wav" );
+	// sound.load( "faithless.wav" );	
 	
 	sound.setLoop( true );
 	sound.play();
@@ -173,8 +183,28 @@ void ofApp::update(){
 					break;
 			}
 			
+			/********************
+			********************/
 			SpectrumIndicator.load_ColorTheme_setting(ColorThemeId);
 			ParticleSet.load_ColorTheme_setting(ColorThemeId);
+			
+			/********************
+			********************/
+			if(TimingAdjust_SpectrumIndicator.get__b_Adjust()){
+				SpectrumIndicator.change_IndicatorType(TimingAdjust_SpectrumIndicator.get__NextValue());
+			}
+			if(TimingAdjust_SpectrumIndicator_point.get__b_Adjust()){
+				TimingAdjust_SpectrumIndicator_point.get__NextValue(); // clear.
+				
+				SpectrumIndicator.toggle_PointIndicator();
+			}
+			if(TimingAdjust_Particle.get__b_Adjust()){
+				TimingAdjust_Particle.get__NextValue(); // clear.
+				
+				b_Particle = !b_Particle;
+				printf("\nparticle = %d\n", b_Particle);
+			}
+
 		}
 	}
 	
@@ -185,6 +215,10 @@ void ofApp::update(){
 	/* 無効時もupdateし、減速させておく */
 	// if(b_Particle) ParticleSet.update(mouseX, mouseY);
 	ParticleSet.update(mouseX, mouseY);
+	
+	/********************
+	********************/
+	video.update();
 }
 
 //--------------------------------------------------------------
@@ -196,7 +230,8 @@ void ofApp::draw(){
 	
 	/********************
 	********************/
-	img_Jacket.draw(0, 0, ofGetWidth(), ofGetHeight());
+	// img_Jacket.draw(0, 0, ofGetWidth(), ofGetHeight());
+	video.draw( 0, 0, ofGetWidth(), ofGetHeight());
 	
 	/********************
 	********************/
@@ -295,7 +330,15 @@ void ofApp::keyPressed(int key){
 			if(State == STATE_NONE){
 				int type = key - '0';
 				if(type < SpectrumIndicator.get_NumIndicatorTypes()){
-					SpectrumIndicator.change_IndicatorType(type);
+					if(BootMode != BOOT_MODE__COLOR_CHANGE){
+						SpectrumIndicator.change_IndicatorType(type);
+					}else{
+						if(ColorThemeTable.IsColorThemeChange_soon(sound.getPositionMS())){
+							TimingAdjust_SpectrumIndicator.set__NextValue(type);
+						}else{
+							SpectrumIndicator.change_IndicatorType(type);
+						}
+					}
 				}
 				
 			}else if(State == STATE_SEEK_INPUT){
@@ -387,8 +430,17 @@ void ofApp::keyPressed(int key){
 			break;
 			
 		case 'p':
-			b_Particle = !b_Particle;
-			printf("\nparticle = %d\n", b_Particle);
+			if(BootMode != BOOT_MODE__COLOR_CHANGE){
+				b_Particle = !b_Particle;
+				printf("\nparticle = %d\n", b_Particle);
+			}else{
+				if(ColorThemeTable.IsColorThemeChange_soon(sound.getPositionMS())){
+					TimingAdjust_Particle.set__NextValue(1);
+				}else{
+					b_Particle = !b_Particle;
+					printf("\nparticle = %d\n", b_Particle);
+				}
+			}
 			break;
 			
 		case 's':
@@ -435,6 +487,8 @@ void ofApp::keyPressed(int key){
 					if(IsSeekTarget_inRange(input_val_sec)){
 						sound.setPositionMS(input_val_sec * 1000);
 						ColorThemeTable.reset();
+						
+						video.setPosition( input_val_sec / video.getDuration() );
 					}
 				}
 			}
@@ -442,7 +496,16 @@ void ofApp::keyPressed(int key){
 			break;
 			
 		case ' ':
-			SpectrumIndicator.toggle_PointIndicator();
+			if(BootMode != BOOT_MODE__COLOR_CHANGE){
+				SpectrumIndicator.toggle_PointIndicator();
+			}else{
+				if(ColorThemeTable.IsColorThemeChange_soon(sound.getPositionMS())){
+					TimingAdjust_SpectrumIndicator_point.set__NextValue(1);
+				}else{
+					SpectrumIndicator.toggle_PointIndicator();
+				}
+			}
+			
 			break;
 	}
 }
