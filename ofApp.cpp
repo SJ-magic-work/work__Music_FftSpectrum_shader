@@ -57,7 +57,8 @@ void ofApp::setup(){
 	/********************
 	********************/
 	// sound.load( "ClubLife by Tiesto Podcast 465.wav" );	
-	sound.load( "ClubLife by Tiesto Podcast 471.wav" );
+	// sound.load( "ClubLife by Tiesto Podcast 471.wav" );
+	sound.load( "ClubLife by Tiesto Podcast 485.wav" );
 	// sound.load( "faithless.wav" );	
 	
 	sound.setLoop( true );
