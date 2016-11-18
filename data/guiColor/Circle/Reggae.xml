@@ -1,0 +1,24 @@
+<group>
+	<Freq_Filter>1</Freq_Filter>
+	<v_space_ratio>1.1</v_space_ratio>
+	<texture_size>0.0145</texture_size>
+	<S>
+		<Speed>25</Speed>
+		<radius>0.06</radius>
+		<line_Height>0.2</line_Height>
+		<color>1, 0.698043, 0.167014, 1</color>
+	</S>
+	<M>
+		<Speed>-8</Speed>
+		<radius>0.138</radius>
+		<line_Height>0.2</line_Height>
+		<color>1, 0.140983, 0.140983, 1</color>
+	</M>
+	<L>
+		<Speed>1.5</Speed>
+		<radius>0.263</radius>
+		<line_Hight>0.2</line_Hight>
+		<color>0.1, 1, 0.10454, 1</color>
+	</L>
+<group/>
+</group>

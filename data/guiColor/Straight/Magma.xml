@@ -1,0 +1,22 @@
+<group>
+	<Freq_Filter>1</Freq_Filter>
+	<x_blank_ratio>0.05</x_blank_ratio>
+	<y_ofs_ratio>0.04</y_ofs_ratio>
+	<v_space_ratio>0.65</v_space_ratio>
+	<texture_size>0.5</texture_size>
+	<Upper_Line>
+		<Speed>0.007</Speed>
+		<line_Height>0.11</line_Height>
+		<color>1, 0.0993336, 0.0993336, 1</color>
+	</Upper_Line>
+	<Middle_Line>
+		<Speed>0.01</Speed>
+		<line_Height>0.11</line_Height>
+		<color>1, 0.5, 0.120158, 1</color>
+	</Middle_Line>
+	<Lower_Line>
+		<Speed>0.008</Speed>
+		<line_Height>0.11</line_Height>
+		<color>1, 0.135777, 0.135777, 1</color>
+	</Lower_Line>
+</group>

@@ -1,0 +1,7 @@
+<group>
+	<PointSize>2</PointSize>
+	<color>0.540816, 0.122449, 1, 0.5</color>
+	<Speed_thresh>0.2</Speed_thresh>
+	<friction_sec>0.0991</friction_sec>
+	<Force_Scale>0.00019</Force_Scale>
+</group>
